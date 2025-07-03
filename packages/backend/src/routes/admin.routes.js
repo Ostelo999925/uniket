@@ -82,4 +82,10 @@ router.post('/pickup-points', sensitiveOperationLimiter, adminController.addPick
 router.put('/pickup-points/:id', sensitiveOperationLimiter, adminController.updatePickupPoint);
 router.delete('/pickup-points/:id', sensitiveOperationLimiter, adminController.deletePickupPoint);
 
+// Pickup manager management
+router.get('/pickup-managers', adminController.getAllPickupManagers);
+router.post('/pickup-managers', adminController.createPickupManager);
+router.put('/pickup-managers/:id', adminController.updatePickupManager);
+router.put('/pickup-managers/:id/deactivate', adminController.deactivatePickupManager);
+
 module.exports = router;

@@ -157,6 +157,8 @@ model pickuppoint {
   region    String
   school    String
   order     order[]
+  managerId Int?     
+  manager   user?    @relation("UserToPickupPoint", fields: [managerId], references: [id])
 }
 
 model product {
@@ -345,11 +347,12 @@ model user {
   productview                                  productview[]
   review                                       review[]
   reviewreaction                               reviewreaction[]
-  supportchat                                  supportchat[]
+  supportchat                                    supportchat[]
   ticket                                       ticket[]
   transaction                                  transaction[]
   useraction                                   useraction[]
   wallet                                       wallet?
+  managedPickupPoints                            pickuppoint[] @relation("UserToPickupPoint")
 
   @@index([role], map: "User_role_idx")
 }

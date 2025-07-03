@@ -28,7 +28,19 @@ function Login() {
       const success = await login(formData.email, formData.password);
       if (success) {
         toast.success("Login successful!");
-        navigate("/");
+        // Get user from localStorage (set by login)
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user?.role === 'admin') {
+          navigate('/admin');
+        } else if (user?.role === 'pickup_manager') {
+          navigate('/pickupmanager/dashboard');
+        } else if(user?.role === 'vendor') {
+          navigate('/vendor/dashboard');
+        } else if(user?.role === 'customer') {
+          navigate('/browse');
+        }else{
+          navigate('/');
+        }
       }
     } catch (error) {
       console.error('Login error:', error);

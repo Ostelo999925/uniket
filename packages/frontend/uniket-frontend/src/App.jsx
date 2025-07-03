@@ -31,6 +31,7 @@ import CurrencySetup from "./pages/CurrencySetup";
 import FlaggedProducts from "./pages/admin/flagged-products";
 import AdminDashboard from './pages/AdminDashboard';
 import Profile from './pages/Profile';
+import PickupManagerDashboard from './pages/PickupManagerDashboard'; // adjust path if needed
 
 // Lazy load components
 const ProductDetail = React.lazy(() => import('./components/ProductDetail'));
@@ -140,6 +141,14 @@ const App = () => {
                     <TrackOrder />
                   </ProtectedRoute>
                 } 
+              />
+              <Route
+                path="/pickupmanager/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["pickup_manager"]}>
+                    <PickupManagerDashboard />
+                  </ProtectedRoute>
+                }
               />
             </Routes>
           </div>

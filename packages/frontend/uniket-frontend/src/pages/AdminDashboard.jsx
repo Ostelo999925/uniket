@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axios'; // Use the configured axios instance
 import { toast } from 'react-toastify';
-import { FaBox, FaUsers, FaShoppingCart, FaStore, FaMapMarkerAlt, FaChartBar, FaTrophy, FaBell } from 'react-icons/fa';
+import { FaBox, FaUsers, FaShoppingCart, FaStore, FaMapMarkerAlt, FaChartBar, FaTrophy, FaBell, FaUserTie } from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line, LabelList } from 'recharts';
 import './AdminDashboard.css';
 import VendorLeaderboard from '../components/VendorLeaderboard';
 import CustomerReport from '../components/CustomerReport';
 import AdminNotifications from '../components/AdminNotifications';
 import { getProductImageUrl } from '../utils/imageUtils';
+import PickupManagersSection from '../components/PickupManagersSection';
 
 const AdminDashboard = () => {
   // State for different sections
@@ -783,6 +784,14 @@ const AdminDashboard = () => {
           >
             <FaMapMarkerAlt />
             Pickup Points
+          </button>
+          <button
+            type="button"
+            onClick={(e) => handleTabChange(e, 'pickup-managers')}
+            className={`admin-nav-item ${activeTab === 'pickup-managers' ? 'active' : ''}`}
+          >
+            <FaUserTie />
+            Pickup Manager
           </button>
           <button
             type="button"
@@ -1678,6 +1687,10 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'pickup-managers' && (
+          <PickupManagersSection />
         )}
 
         {activeTab === 'leaderboard' && (

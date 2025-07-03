@@ -2,6 +2,7 @@ const { product_status } = require('@prisma/client');
 const getPrismaClient = require('../prismaClient');
 const prisma = getPrismaClient();
 const BANNED_WORDS = ["nude", "sex", "gun", "weapon", "drug", "porn"];
+const bcrypt = require('bcryptjs');
 
 // Predefined rejection reasons
 const REJECTION_REASONS = [
@@ -290,7 +291,7 @@ const getAllOrders = async (req, res) => {
 // Get all pickup points
 const getAllPickupPoints = async (req, res) => {
   try {
-    const pickupPoints = await prisma.pickupPoint.findMany({
+    const pickupPoints = await prisma.pickuppoint.findMany({
       orderBy: {
         region: 'asc'
       }
@@ -1065,7 +1066,8 @@ const searchReports = async (req, res) => {
           select: {
             id: true,
             name: true,
-            price: true
+            price: true,
+            image: true
           }
         }
       }
@@ -1367,6 +1369,96 @@ const getVendorLeaderboard = async (req, res) => {
   }
 };
 
+// Pickup Manager Management
+const getAllPickupManagers = async (req, res) => {
+  try {
+    const managers = await prisma.user.findMany({
+      where: { role: 'pickup_manager' },
+      include: { managedPickupPoints: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(managers);
+  } catch (error) {
+    console.error('Error fetching pickup managers:', error);
+    res.status(500).json({ error: 'Failed to fetch pickup managers' });
+  }
+};
+
+const createPickupManager = async (req, res) => {
+  const { name, email, password, phone, pickupPointId } = req.body;
+  if (!name || !email || !password || !phone || !pickupPointId) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  try {
+    // Check if email already exists
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Create user
+    const manager = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        phone,
+        role: 'pickup_manager',
+        updatedAt: new Date()
+      }
+    });
+    // Assign the manager to the pickup point
+    await prisma.pickuppoint.update({
+      where: { id: Number(pickupPointId) },
+      data: { managerId: manager.id }
+    });
+    // Optionally, return the manager with their assigned pickup point
+    const managerWithPickupPoints = await prisma.user.findUnique({
+      where: { id: manager.id },
+      include: { managedPickupPoints: true }
+    });
+    res.status(201).json(managerWithPickupPoints);
+  } catch (error) {
+    console.error('Error creating pickup manager:', error);
+    res.status(500).json({ error: 'Failed to create pickup manager' });
+  }
+};
+
+const updatePickupManager = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  try {
+    const manager = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        name: name || undefined,
+        email: email || undefined,
+        phone: phone || undefined
+      },
+      include: { pickuppoint: true }
+    });
+    res.json(manager);
+  } catch (error) {
+    console.error('Error updating pickup manager:', error);
+    res.status(500).json({ error: 'Failed to update pickup manager' });
+  }
+};
+
+const deactivatePickupManager = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const manager = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { isActive: false }
+    });
+    res.json(manager);
+  } catch (error) {
+    console.error('Error deactivating pickup manager:', error);
+    res.status(500).json({ error: 'Failed to deactivate pickup manager' });
+  }
+};
+
 module.exports = {
   getStats,
   getAllProducts,
@@ -1408,5 +1500,9 @@ module.exports = {
   updatePickupPoint,
   deletePickupPoint,
   getAdminNotifications,
-  getVendorLeaderboard
+  getVendorLeaderboard,
+  getAllPickupManagers,
+  createPickupManager,
+  updatePickupManager,
+  deactivatePickupManager
 };
