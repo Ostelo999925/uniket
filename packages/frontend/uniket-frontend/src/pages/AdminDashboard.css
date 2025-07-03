@@ -1,0 +1,614 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+}
+
+.admin-sidebar {
+  width: 200px;
+  background: #001f3f;
+  color: #fdf7f1;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar-header {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(253, 247, 241, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.admin-sidebar-header h2 {
+  color: #fdf7f1;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  color: #fdf7f1;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin-nav-item:hover {
+  background: rgba(253, 247, 241, 0.1);
+  color: #ffeebb;
+}
+
+.admin-nav-item.active {
+  background: rgba(253, 247, 241, 0.15);
+  color: #ffeebb;
+}
+
+.admin-nav-item svg {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.admin-main-content {
+  flex: 1;
+  padding: 1rem;
+  background-color: #f8f9fa;
+}
+
+.admin-header {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header h1 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.admin-filter {
+  width: 200px;
+}
+
+.admin-filter select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  background: white;
+  color: #2c3e50;
+  font-size: 0.875rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  color: #7f8c8d;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.stat-card .stat-subtitle {
+  color: #95a5a6;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.admin-table {
+  background: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.admin-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background: #f8f9fa;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.875rem;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-top: 1px solid #eee;
+  font-size: 0.875rem;
+  color: #2c3e50;
+}
+
+.admin-table tr:hover {
+  background: #f8f9fa;
+}
+
+.admin-btn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+.admin-btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.admin-btn-primary:hover {
+  background: #2980b9;
+}
+
+.admin-btn-danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.admin-btn-danger:hover {
+  background: #c0392b;
+}
+
+.admin-btn-success {
+  background: #2ecc71;
+  color: white;
+}
+
+.admin-btn-success:hover {
+  background: #27ae60;
+}
+
+.admin-form {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.admin-form-group {
+  margin-bottom: 1rem;
+}
+
+.admin-form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.admin-form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  background: white;
+  color: #2c3e50;
+}
+
+.admin-form-control:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.loading-spinner::after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.rejection-reason {
+  font-size: 0.875rem;
+  color: #991b1b;
+  font-style: italic;
+}
+
+/* Product Grid Styles */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-title {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.card-text {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .row-cols-md-2 .col {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-title {
+    font-size: 1rem;
+  }
+  
+  .card-text {
+    font-size: 0.8125rem;
+  }
+}
+
+.products-section {
+  padding: 20px;
+}
+
+.products-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.products-tabs button {
+  padding: 10px 20px;
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.products-tabs button.active {
+  background: #007bff;
+  color: white;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-details {
+  padding: 15px;
+}
+
+.product-details h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+}
+
+.product-details p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.approve-btn, .reject-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.approve-btn {
+  background: #28a745;
+  color: white;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reject-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.reject-reason-select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.confirm-reject-btn, .cancel-reject-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.confirm-reject-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.cancel-reject-btn {
+  background: #6c757d;
+  color: white;
+}
+
+/* Hover effects */
+.approve-btn:hover {
+  background: #218838;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+}
+
+.confirm-reject-btn:hover {
+  background: #c82333;
+}
+
+.cancel-reject-btn:hover {
+  background: #5a6268;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2em;
+  color: #666;
+}
+
+/* Order Details Modal Styles */
+.modal {
+  z-index: 1050;
+}
+
+.modal-dialog {
+  margin: 1.75rem auto;
+  max-width: 800px;
+}
+
+.modal-content {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.modal h6 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.modal p {
+  margin-bottom: 0.5rem;
+}
+
+.modal .table {
+  margin-bottom: 0;
+}
+
+.modal .table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Order Card Hover Effect */
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Order Details Section Styles */
+.order-details-section {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.order-details-section .card {
+  border: none;
+  box-shadow: none;
+}
+
+.order-details-section .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
+}
+
+.order-details-section .card-body {
+  padding: 1.5rem;
+}
+
+.order-details-section h6 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.order-details-section p {
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+}
+
+.order-details-section p strong {
+  color: #495057;
+  margin-right: 0.5rem;
+}
+
+.order-details-section .table {
+  margin-top: 1rem;
+}
+
+.order-details-section .table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Selected Order Card Style */
+.card.selected {
+  border: 2px solid #001f3f;
+  background-color: #f8f9fa;
+}
+
+.card.selected:hover {
+  transform: none;
+} 

@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model bid {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+  status    String   @default("PENDING")
+  updatedAt DateTime
+  product   product  @relation(fields: [productId], references: [id], map: "Bid_productId_fkey")
+  user      user     @relation(fields: [userId], references: [id], map: "Bid_userId_fkey")
+
+  @@index([productId], map: "Bid_productId_fkey")
+  @@index([userId], map: "Bid_userId_fkey")
+}
+
+model cartitem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  product   product  @relation(fields: [productId], references: [id], map: "CartItem_productId_fkey")
+  user      user     @relation(fields: [userId], references: [id], map: "CartItem_userId_fkey")
+
+  @@unique([userId, productId], map: "CartItem_userId_productId_key")
+  @@index([productId], map: "CartItem_productId_fkey")
+}
+
+model customerreport {
+  id                                 Int      @id @default(autoincrement())
+  userId                             Int
+  orderId                            Int
+  vendorId                           Int
+  type                               String
+  reason                             String
+  description                        String?
+  status                             String   @default("pending")
+  metadata                           String?
+  createdAt                          DateTime @default(now())
+  updatedAt                          DateTime
+  adminResponse                      String?
+  order                              order    @relation(fields: [orderId], references: [id], map: "CustomerReport_orderId_fkey")
+  user_customerreport_userIdTouser   user     @relation("customerreport_userIdTouser", fields: [userId], references: [id], map: "CustomerReport_userId_fkey")
+  user_customerreport_vendorIdTouser user     @relation("customerreport_vendorIdTouser", fields: [vendorId], references: [id], map: "CustomerReport_vendorId_fkey")
+
+  @@index([orderId], map: "CustomerReport_orderId_idx")
+  @@index([userId], map: "CustomerReport_userId_idx")
+  @@index([vendorId], map: "CustomerReport_vendorId_idx")
+}
+
+model loginattempt {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  email     String
+  success   Boolean
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user      user?    @relation(fields: [userId], references: [id], map: "LoginAttempt_userId_fkey")
+
+  @@index([userId], map: "LoginAttempt_userId_idx")
+}
+
+model notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  type      String
+  data      String?  @db.Text
+  role      String   @default("customer")
+  user      user     @relation(fields: [userId], references: [id], map: "Notification_userId_fkey")
+
+  @@index([userId], map: "Notification_userId_fkey")
+}
+
+model order {
+  id                    Int              @id @default(autoincrement())
+  productId             Int
+  createdAt             DateTime         @default(now())
+  customerId            Int
+  paymentMethod         String?
+  paymentRef            String?
+  shippingAddress       String?
+  shippingName          String?
+  status                String?          @default("Processing")
+  pickupPointId         Int?
+  total                 Float?
+  quantity              Int
+  deliveryMethod        String?
+  averageRating         Float?           @default(0)
+  adminResponse         String?
+  estimatedDeliveryTime DateTime?
+  trackingId            String?          @unique(map: "Order_trackingId_key")
+  customerreport        customerreport[]
+  pickuppoint           pickuppoint?     @relation(fields: [pickupPointId], references: [id], map: "Order_pickupPointId_fkey")
+  user                  user             @relation(fields: [customerId], references: [id], map: "fk_order_customer")
+  product               product          @relation(fields: [productId], references: [id], map: "fk_order_product")
+  orderrating           orderrating?
+  ordertracking         ordertracking?
+  ticket                ticket[]
+
+  @@index([pickupPointId], map: "Order_pickupPointId_fkey")
+  @@index([trackingId], map: "Order_trackingId_idx")
+  @@index([customerId], map: "fk_order_customer")
+  @@index([productId], map: "fk_order_product")
+}
+
+model orderrating {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @unique(map: "OrderRating_orderId_key")
+  userId     Int
+  rating     Int
+  feedback   String?
+  categories Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  order      order    @relation(fields: [orderId], references: [id], map: "OrderRating_orderId_fkey")
+  user       user     @relation(fields: [userId], references: [id], map: "OrderRating_userId_fkey")
+
+  @@index([userId], map: "OrderRating_userId_idx")
+}
+
+model ordertracking {
+  id                String    @id
+  orderId           Int       @unique(map: "OrderTracking_orderId_key")
+  status            String
+  history           Json
+  currentLocation   String?
+  carrier           String?
+  trackingNumber    String?
+  estimatedDelivery DateTime?
+  lastUpdate        DateTime
+  nextUpdate        DateTime
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime
+  order             order     @relation(fields: [orderId], references: [id], map: "OrderTracking_orderId_fkey")
+}
+
+model pickuppoint {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  location  String
+  region    String
+  school    String
+  order     order[]
+}
+
+model product {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String
+  price         Float
+  image         String
+  category      String
+  isFlagged     Boolean        @default(false)
+  vendorId      Int
+  createdAt     DateTime       @default(now())
+  quantity      Int            @default(0)
+  flaggedReason String?
+  views         Int            @default(0)
+  bidEndDate    DateTime?
+  currentBid    Float?
+  enableBidding Boolean        @default(false)
+  startingBid   Float?
+  updatedAt     DateTime
+  status        product_status @default(PENDING)
+  approvedAt    DateTime?
+  approvedBy    Int?
+  isTicket      Boolean        @default(false)
+  bid           bid[]
+  cartitem      cartitem[]
+  order         order[]
+  user          user           @relation(fields: [vendorId], references: [id], map: "Product_vendorId_fkey")
+  productview   productview[]
+  rating        rating[]
+  review        review[]
+  ticket        ticket[]
+  ticketdetails ticketdetails?
+
+  @@index([vendorId], map: "Product_vendorId_idx")
+}
+
+model productview {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  userId    Int
+  viewedAt  DateTime @default(now())
+  product   product  @relation(fields: [productId], references: [id], map: "ProductView_productId_fkey")
+  user      user     @relation(fields: [userId], references: [id], map: "ProductView_userId_fkey")
+
+  @@unique([productId, userId], map: "ProductView_productId_userId_key")
+  @@index([productId], map: "ProductView_productId_idx")
+  @@index([userId], map: "ProductView_userId_idx")
+}
+
+model rating {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  userId    Int
+  rating    Int
+  createdAt DateTime @default(now())
+  product   product  @relation(fields: [productId], references: [id], map: "Rating_productId_fkey")
+
+  @@index([productId], map: "Rating_productId_fkey")
+}
+
+model review {
+  id             Int              @id @default(autoincrement())
+  productId      Int
+  userId         Int
+  createdAt      DateTime         @default(now())
+  comment        String
+  rating         Int
+  updatedAt      DateTime
+  isReport       Boolean          @default(false)
+  product        product          @relation(fields: [productId], references: [id], onDelete: Cascade, map: "Review_productId_fkey")
+  user           user             @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Review_userId_fkey")
+  reviewreaction reviewreaction[]
+
+  @@index([productId], map: "Review_productId_idx")
+  @@index([userId], map: "Review_userId_idx")
+}
+
+model reviewreaction {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  type      String
+  review    review   @relation(fields: [reviewId], references: [id], map: "ReviewReaction_reviewId_fkey")
+  user      user     @relation(fields: [userId], references: [id], map: "ReviewReaction_userId_fkey")
+
+  @@unique([userId, reviewId], map: "ReviewReaction_userId_reviewId_key")
+  @@index([reviewId], map: "ReviewReaction_reviewId_fkey")
+}
+
+model supportchat {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String   @db.Text
+  type      String
+  parentId  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  user      user     @relation(fields: [userId], references: [id], map: "SupportChat_userId_fkey")
+  parent    supportchat? @relation("SupportChatToParent", fields: [parentId], references: [id])
+  children  supportchat[] @relation("SupportChatToParent")
+
+  @@index([parentId], map: "SupportChat_parentId_idx")
+  @@index([userId], map: "SupportChat_userId_idx")
+}
+
+model ticket {
+  id           Int       @id @default(autoincrement())
+  ticketNumber String    @unique(map: "Ticket_ticketNumber_key")
+  qrCode       String    @db.VarChar(191)
+  productId    Int
+  orderId      Int
+  userId       Int
+  status       String    @default("VALID")
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
+  order        order     @relation(fields: [orderId], references: [id], map: "Ticket_orderId_fkey")
+  product      product   @relation(fields: [productId], references: [id], map: "Ticket_productId_fkey")
+  user         user      @relation(fields: [userId], references: [id], map: "Ticket_userId_fkey")
+
+  @@index([orderId], map: "Ticket_orderId_idx")
+  @@index([productId], map: "Ticket_productId_idx")
+  @@index([ticketNumber], map: "Ticket_ticketNumber_idx")
+  @@index([userId], map: "Ticket_userId_idx")
+}
+
+model ticketdetails {
+  id            Int      @id @default(autoincrement())
+  productId     Int      @unique(map: "TicketDetails_productId_key")
+  eventName     String
+  eventDate     DateTime
+  eventLocation String
+  ticketType    String
+  validFrom     DateTime
+  validUntil    DateTime
+  terms         String   @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  product       product  @relation(fields: [productId], references: [id], map: "TicketDetails_productId_fkey")
+}
+
+model transaction {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  type        String
+  amount      Float
+  description String?
+  createdAt   DateTime @default(now())
+  status      String   @default("PENDING")
+  user        user     @relation(fields: [userId], references: [id], map: "Transaction_userId_fkey")
+
+  @@index([userId], map: "Transaction_userId_fkey")
+}
+
+model user {
+  id                                           Int              @id @default(autoincrement())
+  name                                         String
+  email                                        String           @unique(map: "User_email_key")
+  password                                     String
+  role                                         String           @default("customer")
+  createdAt                                    DateTime         @default(now())
+  phone                                        String
+  profileComplete                              Int              @default(0)
+  image                                        String?
+  updatedAt                                    DateTime
+  address                                      String?
+  city                                         String?
+  country                                      String?          @default("Ghana")
+  region                                       String?
+  zipCode                                      String?
+  emailNotifications                           Boolean          @default(false)
+  smsNotifications                             Boolean          @default(false)
+  lastLogin                                    DateTime?
+  bid                                          bid[]
+  cartitem                                     cartitem[]
+  customerreport_customerreport_userIdTouser   customerreport[] @relation("customerreport_userIdTouser")
+  customerreport_customerreport_vendorIdTouser customerreport[] @relation("customerreport_vendorIdTouser")
+  loginattempt                                 loginattempt[]
+  notification                                 notification[]
+  order                                        order[]
+  orderrating                                  orderrating[]
+  product                                      product[]
+  productview                                  productview[]
+  review                                       review[]
+  reviewreaction                               reviewreaction[]
+  supportchat                                  supportchat[]
+  ticket                                       ticket[]
+  transaction                                  transaction[]
+  useraction                                   useraction[]
+  wallet                                       wallet?
+
+  @@index([role], map: "User_role_idx")
+}
+
+model useraction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  ipAddress String?
+  userAgent String?
+  metadata  String?
+  createdAt DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "UserAction_userId_fkey")
+
+  @@index([createdAt], map: "UserAction_createdAt_idx")
+  @@index([userId], map: "UserAction_userId_idx")
+}
+
+model wallet {
+  id        Int      @id @default(autoincrement())
+  balance   Float    @default(0)
+  userId    Int      @unique(map: "Wallet_userId_key")
+  createdAt DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], map: "Wallet_userId_fkey")
+}
+
+enum product_status {
+  APPROVED
+  PENDING
+  REJECTED
+}

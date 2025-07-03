@@ -1,0 +1,28 @@
+/* Reset basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* App wrapper for full width */
+#root {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .cart-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cart-item-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

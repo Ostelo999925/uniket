@@ -1,0 +1,20 @@
+.delivery-tracking {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .delivery-tracking h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .delivery-tracking p {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
+  .delivery-tracking strong {
+    font-weight: bold;
+  }
+  

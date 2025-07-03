@@ -1,0 +1,30 @@
+/* Navbar.css */
+
+.navbar-custom {
+    background-color: #001f3f; /* Deep blue */
+    padding: 0.75rem;
+  }
+  
+  .navbar-brand {
+    color: #fdf7f1 !important; /* Cream */
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+  .navbar-nav .nav-link {
+    color: #fdf7f1 !important; /* Cream */
+    margin-left: 1rem;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #ffeebb !important; /* Lighter cream on hover */
+  }
+  
+  .navbar-toggler {
+    border-color: #fdf7f1;
+  }
+  
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(253,247,241, 1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+  

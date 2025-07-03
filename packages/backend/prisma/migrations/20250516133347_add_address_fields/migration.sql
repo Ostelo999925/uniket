@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `user` ADD COLUMN `address` VARCHAR(191) NULL,
+    ADD COLUMN `city` VARCHAR(191) NULL,
+    ADD COLUMN `country` VARCHAR(191) NULL DEFAULT 'Ghana',
+    ADD COLUMN `region` VARCHAR(191) NULL,
+    ADD COLUMN `zipCode` VARCHAR(191) NULL;

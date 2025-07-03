@@ -1,0 +1,33 @@
+/* src/styles/salesStats.css */
+
+.sales-stats {
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  .sales-stats h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .sales-stats table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .sales-stats th,
+  .sales-stats td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .sales-stats th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .sales-stats td {
+    background-color: #fff;
+  }
+  
